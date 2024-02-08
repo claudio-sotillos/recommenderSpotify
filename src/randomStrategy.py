@@ -6,119 +6,62 @@ import requests
 import random
 import pickle
 
-from utils import update_recommender_pickle
-from login import loginPLST
+from createPlaylist import recommend_createPL
+from login import loginPLT
 
-sp, playlistID =  loginPLST(playlistName='Ma Musik', scope = "playlist-modify-private")
+class InvalidPlaylistNameError(Exception):
+    """Expected playlist name but got None."""
+    pass
 
-#  Retrieve the tracks in the playlist
-user_profile = sp.current_user()
-user_id = user_profile["id"]
-playlist = sp.playlist(playlistID)
-total_tracks = playlist["tracks"]["total"]
+def random_based_strategy(playlist_name = None):
 
-# Set the batch size for each request (e.g., 50 tracks per request)
-batch_size = 50
-limit = 5
-seed_tracks = []
-
-genres = []
-artistas = {}
-
-playlist_name = "REC List: "
+    if playlist_name is None:
+        raise InvalidPlaylistNameError("The playlist name cannot be None.")
+    # Log in & Choose playlist
+    sp, playlistID =  loginPLT(playlistName='Ma Musik', scope = "playlist-modify-private")
 
 
-print("\nRecommendations Based on: ")
+    #  Retrieve the tracks in the playlist
+    playlist = sp.playlist(playlistID)
+    total_tracks = playlist["tracks"]["total"]
 
-# Retrieve the tracks in the playlist in reverse order (most recent first)
-for offset in range(total_tracks - batch_size, -1, -batch_size):
-    results = sp.playlist_tracks(playlistID, limit=batch_size, offset=offset)
+    # Set the batch size for each request (e.g., 50 tracks per request)
+    batch_size = 50
+    limit = 5
 
-    randSongs = random.sample(results["items"], limit)
 
-    for track in randSongs:
-        print(track["track"]["name"])
-        for artist in track["track"]["artists"]:
-            playlist_name += artist["name"] + ", "
-            artistas[artist["name"]] = artist["id"]
-        # artists.append(track['track']['artists'])
-        #
-        # genres = get_genres(track["track"])
-        seed_tracks.append(track["track"]["id"])
+    genres = []
+    artistas = {}
+
+    playlist_name = "Random List:  "
+
+
+    print("\nRecommendations Based on: ")
+
+    seed_tracks = []
+    seed_artists = []
+    # Retrieve the tracks in the playlist in reverse order (most recent first)
+    for offset in range(total_tracks - batch_size, -1, -batch_size):
+        results = sp.playlist_tracks(playlistID, limit=batch_size, offset=offset)
+
+        randSongs = random.sample(results["items"], limit)
+
+        for track in randSongs:
+            print(track["track"]["name"])
+            for artist in track["track"]["artists"]:
+                playlist_name += artist["name"] + ", "
+                artistas[artist["name"]] = artist["id"]
+            # artists.append(track['track']['artists'])
+            #
+            # genres = get_genres(track["track"])
+            seed_tracks.append(track["track"]["id"])
+
+            # Stop the loop when the limit is reached
+            if len(seed_tracks) >= limit:
+                break
 
         # Stop the loop when the limit is reached
         if len(seed_tracks) >= limit:
             break
 
-    # Stop the loop when the limit is reached
-    if len(seed_tracks) >= limit:
-        break
-
-
-new_playlist = sp.user_playlist_create(user=user_id, name=playlist_name, public=False)
-playlistLen = 30
-track_uris = []
-with open('recommended_ids.pkl', 'rb') as f:
-    recommended_track_ids = pickle.load(f)
-
-
-print('\n Recommended Songs')
-while len(track_uris) < playlistLen:
-    recommendations = sp.recommendations(seed_tracks=seed_tracks, limit=playlistLen +5 )
-    for track in recommendations["tracks"]:
-
-        if len(track_uris) >= playlistLen:
-            break
-
-        if track["uri"] not in recommended_track_ids:
-            recommended_track_ids.add(track["uri"])
-            track_uris.append(track["uri"])
-            print('\nSong Name: ',track["name"])
-            print('Artists: ',track["artists"][0]["name"])
-
-
-
-with open('recommended_ids.pkl', 'wb') as f:
-    pickle.dump(recommended_track_ids, f)
-
-
-sp.user_playlist_add_tracks(
-    user=user_id, playlist_id=new_playlist["id"], tracks=track_uris
-)
-
-
-### Tries
-
-
-# artistID = artistas[list(artistas.keys())[0]]
-# print(artistID)
-# sp.artists(artist_id= str(artistID))
-
-# ranges = ['medium_term', 'long_term']
-# for sp_range in ranges:
-#     print("range:", sp_range)
-#     results = sp.current_user_top_tracks(time_range=sp_range)
-#     for i, item in enumerate(results['items']):
-#         print(i, item['name'], '//', item['artists'][0]['name'])
-#     print()
-
-
-
-
-# def get_genres(track_details):
-#     genres = {}
-#     # Get the artists associated with the track
-#     artists = [artist["name"] for artist in track_details["artists"]]
-
-#     # Fetch genre information for each artist
-#     for artist_name in artists:
-#         # Make a request to the Last.fm API to get artist info (replace 'API_KEY' with your actual Last.fm API key)
-#         response = requests.get(
-#             f"http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist={artist_name}&api_key=API_KEY&format=json"
-#         )
-#         data = response.json()
-#         if "artist" in data and "tags" in data["artist"]:
-#             artist_genres = [tag["name"] for tag in data["artist"]["tags"]["tag"]]
-#             genres.extend(artist_genres)
-
-#     return genres
+    recommend_createPL(seed_artists,seed_tracks, playlist_name)
