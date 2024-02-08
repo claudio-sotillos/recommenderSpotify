@@ -6,43 +6,14 @@ import requests
 import random
 import pickle
 
+from utils import update_recommender_pickle
+from login import loginPLST
 
+sp, playlistID =  loginPLST(playlistName='Ma Musik', scope = "playlist-modify-private")
 
-
-load_dotenv()
-# Access environment variables
-clientId = os.getenv("SPOTIFY_CLIENT_ID")
-clientSecret = os.getenv("SPOTIFY_CLIENT_SECRET")
-playlistId = os.getenv("SPOTIFY_PLAYLIST_ID")
-
-# Authenticate using your client ID and client secret
-sp = spotipy.Spotify(
-    auth_manager=SpotifyOAuth(
-        client_id=clientId,
-        client_secret=clientSecret,
-        redirect_uri="http://localhost:8888/callback",
-        scope="playlist-modify-private",
-    )
-)
-
-
-playlisName = "Ma Musik"
+#  Retrieve the tracks in the playlist
 user_profile = sp.current_user()
 user_id = user_profile["id"]
-
-# Get the current user's playlists
-playlists = sp.current_user_playlists()
-
-plNames = []
-# Iterate over the playlists and print their names and IDs
-for playlist in playlists["items"]:
-    plNames.append(playlist["name"].lower())
-    if playlist["name"].lower() == playlisName.lower():
-        playlistID = playlist["id"]
-
-
-# Retrieve the tracks in the playlist
-
 playlist = sp.playlist(playlistID)
 total_tracks = playlist["tracks"]["total"]
 
