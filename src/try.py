@@ -1,13 +1,31 @@
 import pickle 
-
-with open('recommended_ids.pkl', 'rb') as f:
-        recommended_track_ids = pickle.load(f)
-
-print(len(recommended_track_ids))
+import os
+import sys
+from login import loginPLT
 
 
+sp, _ = loginPLT(playlistName="Ma Musik", scope="user-library-read")
 
+# Function to get all track IDs from saved tracks
+def get_all_track_ids():
+    all_track_ids = []
+    offset = 0
+    limit = 50  # Max limit per request
+    while True:
+        saved_tracks = sp.current_user_saved_tracks(limit=limit, offset=offset)
+        if not saved_tracks['items']:
+            break  # No more tracks
+        for item in saved_tracks['items']:
+            track_id = item['track']['id']
+            if track_id:
+                all_track_ids.append(track_id)
+        offset += limit
+    return all_track_ids
 
+# Get all track IDs
+all_track_ids = get_all_track_ids()
+
+print(len(all_track_ids))
 
 ### Tries
 

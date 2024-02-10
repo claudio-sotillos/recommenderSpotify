@@ -1,4 +1,7 @@
 *.cache
 .env
 recommended_ids.pkl
-try.py
+src/try.py
+main.spec
+build
+dist
