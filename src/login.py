@@ -1,10 +1,10 @@
-import os , sys
+import os, sys
 from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
 
-def loginPLT(playlistName='Ma Musik', scope = "playlist-modify-private"):
+def loginPLT(scope="playlist-modify-private"):
 
     load_dotenv()
     # Access environment variables
@@ -24,7 +24,6 @@ def loginPLT(playlistName='Ma Musik', scope = "playlist-modify-private"):
             env_file.write(f"\nSPOTIFY_CLIENT_ID={client_id}\n")
             env_file.write(f"SPOTIFY_CLIENT_SECRET={client_secret}\n")
 
-
     # Authenticate using your client ID and client secret
     sp = spotipy.Spotify(
         auth_manager=SpotifyOAuth(
@@ -35,14 +34,4 @@ def loginPLT(playlistName='Ma Musik', scope = "playlist-modify-private"):
         )
     )
 
-    # Get the current user's playlists
-    playlists = sp.current_user_playlists()
-
-    plNames = []
-    # Iterate over the playlists and print their names and IDs
-    for playlist in playlists["items"]:
-        plNames.append(playlist["name"].lower())
-        if playlist["name"].lower() == playlistName.lower():
-            playlistID = playlist["id"]
-
-    return sp, playlistID
+    return sp

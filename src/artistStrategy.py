@@ -8,19 +8,43 @@ import pickle
 
 from login import loginPLT
 from createPlaylist import recommend_createPL
+from utils import get_playlist_id
+from utils import get_user_top_items
 
 class InvalidPlaylistNameError(Exception):
     """Expected playlist name but got None."""
     pass
 
-def artist_based_strategy(playlist_name = None):
+
+def top_artist_strategy(time_range="medium_term"):
+
+    playlist_name = f"Artist List ({time_range}):  "
+
+    print("\nRecommendations Based on: ")
+
+    seed_tracks = []
+    seed_artists = []
+    seed_genres = []
+
+    # Retrieve top items based on user's preference of time range
+    top_items = get_user_top_items(time_range=time_range, limit=5, type="artists")
+    for item in top_items:
+        playlist_name += item["name"] + ", "
+        print(item["name"])  # Print the name of the artist
+        seed_artists.append(item["id"])  # Store the ID of the artist
+
+    # Create playlist with recommendations
+    recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name)
+
+
+def artist_based_strategy(playlist_name=None):
 
     if playlist_name is None:
         raise InvalidPlaylistNameError("The playlist name cannot be None.")
-    
-    # Log in & Choose playlist
-    sp, playlistID = loginPLT(playlistName=playlist_name, scope="playlist-modify-private")
 
+    # Log in & Choose playlist
+    sp = loginPLT(scope="playlist-modify-private")
+    playlistID = get_playlist_id(sp, playlistName=playlist_name)
 
     #  Retrieve the tracks in the playlist
     playlist = sp.playlist(playlistID)
@@ -50,7 +74,6 @@ def artist_based_strategy(playlist_name = None):
 
                 artist_name = artist["name"]
                 artist_id = artist["id"]
-            
 
                 # Update the count for the current artist
                 if artist_name in artist_counts.keys():
@@ -64,18 +87,18 @@ def artist_based_strategy(playlist_name = None):
 
     print("Top ", limit, " artists Selected")
     # Sort the artists by their counts in descending order
-    sorted_artists = sorted(artist_counts.items(), key=lambda x: x[1], reverse=True)[:100]
-
+    sorted_artists = sorted(artist_counts.items(), key=lambda x: x[1], reverse=True)[
+        :100
+    ]
 
     randArtists = random.sample(sorted_artists, 5)
 
     seed_artists = []
     seed_tracks = []
+    seed_genres = []
     for artist in randArtists:
-        print(artist[0], '(Counts: ',artist[1],')')
+        print(artist[0], "(Counts: ", artist[1], ")")
         playlist_name += artist[0] + ", "
         seed_artists.append(artistas[artist[0]])
 
-
-    recommend_createPL(seed_artists,seed_tracks, playlist_name)
-
+    recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name)

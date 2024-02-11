@@ -3,10 +3,10 @@ import os, sys
 from login import loginPLT
 
 
-def recommend_createPL(seed_artists, seed_tracks, playlist_name):
+def recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name):
 
     # Log in & Choose playlist
-    sp, _ = loginPLT(playlistName="Ma Musik", scope="playlist-modify-private")
+    sp = loginPLT(scope="playlist-modify-private")
 
     user_profile = sp.current_user()
     user_id = user_profile["id"]
@@ -37,7 +37,10 @@ def recommend_createPL(seed_artists, seed_tracks, playlist_name):
     while len(track_uris) < playlistLen:
 
         recommendations = sp.recommendations(
-            seed_artists=seed_artists, seed_tracks=seed_tracks, limit=playlistLen + 5
+            seed_artists=seed_artists,
+            seed_tracks=seed_tracks,
+            seed_genres=seed_genres,
+            limit=playlistLen + 5,
         )
         for track in recommendations["tracks"]:
 

@@ -1,25 +1,43 @@
-from dotenv import load_dotenv
-import os
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-import requests
 import random
-import pickle
 
 from createPlaylist import recommend_createPL
 from login import loginPLT
+from utils import get_playlist_id
+from utils import get_user_top_items
+
 
 class InvalidPlaylistNameError(Exception):
     """Expected playlist name but got None."""
     pass
 
-def random_based_strategy(playlist_name = None):
+def track_based_strategy(time_range="medium_term"):
+
+    playlist_name = f"Track List ({time_range}):  "
+
+    print("\nRecommendations Based on: ")
+
+    seed_tracks = []
+    seed_artists = []
+    seed_genres = []
+
+    # Retrieve top items based on user's preference of time range
+    top_items = get_user_top_items(time_range=time_range, limit=5, type="tracks")
+    for item in top_items:
+        playlist_name += item["name"] + ", "
+        print(item["name"])  # Print the name of the track
+        seed_tracks.append(item["id"])  # Store the ID of the track in seed_tracks list
+
+    # Create playlist with recommendations
+    recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name)
+
+def random_tracks_based_strategy(playlist_name = None):
 
     if playlist_name is None:
         raise InvalidPlaylistNameError("The playlist name cannot be None.")
+    
     # Log in & Choose playlist
-    sp, playlistID =  loginPLT(playlistName='Ma Musik', scope = "playlist-modify-private")
-
+    sp = loginPLT(scope="playlist-modify-private")
+    playlistID = get_playlist_id(sp, playlistName=playlist_name)
 
     #  Retrieve the tracks in the playlist
     playlist = sp.playlist(playlistID)
@@ -33,13 +51,14 @@ def random_based_strategy(playlist_name = None):
     genres = []
     artistas = {}
 
-    playlist_name = "Random List:  "
+    playlist_name = "Random Tracks List:  "
 
 
     print("\nRecommendations Based on: ")
 
     seed_tracks = []
     seed_artists = []
+    seed_genres = []
     # Retrieve the tracks in the playlist in reverse order (most recent first)
     for offset in range(total_tracks - batch_size, -1, -batch_size):
         results = sp.playlist_tracks(playlistID, limit=batch_size, offset=offset)
@@ -64,4 +83,4 @@ def random_based_strategy(playlist_name = None):
         if len(seed_tracks) >= limit:
             break
 
-    recommend_createPL(seed_artists,seed_tracks, playlist_name)
+    recommend_createPL(seed_artists,seed_tracks,seed_genres, playlist_name)
