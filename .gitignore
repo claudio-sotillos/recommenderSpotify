@@ -1,7 +1,7 @@
 *.cache
 .env
 recommended_ids.pkl
-src/try.py
 main.spec
 build
 dist
+try.py
