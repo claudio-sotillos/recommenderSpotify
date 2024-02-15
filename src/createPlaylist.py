@@ -11,27 +11,23 @@ def recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name):
     user_profile = sp.current_user()
     user_id = user_profile["id"]
 
-    print("\nNew Playlist --- ", playlist_name)
+    print("  \n  New Playlist --- ", playlist_name)
 
     playlistLen = 30
 
     ## FOR LOCAL
-    script_directory = os.path.dirname(sys.argv[0])
-    parent_directory = os.path.dirname(script_directory)
-    pickle_file_path = os.path.normpath(
-        os.path.join(parent_directory, "recommended_ids.pkl")
-    )
-
-    ## FOR EXE
-    # pickle_directory = os.path.dirname(os.path.dirname(os.path.dirname(sys.executable)))
+    # script_directory = os.path.dirname(sys.argv[0])
+    # parent_directory = os.path.dirname(script_directory)
     # pickle_file_path = os.path.normpath(
-    #     os.path.join(pickle_directory, "recommended_ids.pkl")
+    #     os.path.join(parent_directory, "recommended_ids.pkl")
     # )
 
+    # FOR EXE
+    pickle_file_path = os.path.join(os.path.dirname(sys.executable),  '_internal', 'recommended_ids.pkl')
     with open(pickle_file_path, "rb") as f:
         recommended_track_ids = pickle.load(f)
 
-    print("\n Recommended Songs")
+    print("  \n   Recommended Songs")
 
     track_uris = []
     while len(track_uris) < playlistLen:
@@ -50,8 +46,8 @@ def recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name):
             if track["uri"] not in recommended_track_ids:
                 recommended_track_ids.add(track["uri"])
                 track_uris.append(track["uri"])
-                print("\n  Song Name: ", track["name"])
-                print("    Artists: ", track["artists"][0]["name"])
+                print("  \n    Song Name: ", track["name"])
+                print("      Artists: ", track["artists"][0]["name"])
 
     print()
 

@@ -14,7 +14,7 @@ def track_based_strategy(time_range="medium_term"):
 
     playlist_name = f"Track List ({time_range}):  "
 
-    print("\nRecommendations Based on: ")
+    print("  \n  Recommendations Based on: ")
 
     seed_tracks = []
     seed_artists = []
@@ -54,7 +54,7 @@ def random_tracks_based_strategy(playlist_name = None):
     playlist_name = "Random Tracks List:  "
 
 
-    print("\nRecommendations Based on: ")
+    print("  \n  Recommendations Based on: ")
 
     seed_tracks = []
     seed_artists = []

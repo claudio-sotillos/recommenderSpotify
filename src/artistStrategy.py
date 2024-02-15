@@ -1,18 +1,12 @@
-from dotenv import load_dotenv
-import os
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-import requests
-import random
-import pickle
-
 from login import loginPLT
 from createPlaylist import recommend_createPL
 from utils import get_playlist_id
 from utils import get_user_top_items
 
+
 class InvalidPlaylistNameError(Exception):
     """Expected playlist name but got None."""
+
     pass
 
 
@@ -20,7 +14,7 @@ def top_artist_strategy(time_range="medium_term"):
 
     playlist_name = f"Artist List ({time_range}):  "
 
-    print("\nRecommendations Based on: ")
+    print("  \n    Recommendations Based on: ")
 
     seed_tracks = []
     seed_artists = []
@@ -58,8 +52,8 @@ def artist_based_strategy(playlist_name=None):
 
     playlist_name = "Based on: "
 
-    print("\nRecommendations Based on: ")
-    print("Gathering data ...")
+    print("  \n  Recommendations Based on: ")
+    print("  Gathering data ...")
     artistas = {}
     artist_counts = {}
 
@@ -85,7 +79,7 @@ def artist_based_strategy(playlist_name=None):
         # else:
         #     break
 
-    print("Top ", limit, " artists Selected")
+    print("  Top ", limit, " artists Selected")
     # Sort the artists by their counts in descending order
     sorted_artists = sorted(artist_counts.items(), key=lambda x: x[1], reverse=True)[
         :100

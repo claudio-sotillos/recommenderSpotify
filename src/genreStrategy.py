@@ -9,7 +9,7 @@ def genre_based_strategy( time_range="medium_term"):
 
     playlist_name = f"Genre List ({time_range}):  "
 
-    print("\nRecommendations Based on: ")
+    print("  \n  Recommendations Based on: ")
 
     seed_tracks = []
     seed_artists = []
