@@ -6,9 +6,10 @@ This Python application leverages the Spotify API to provide personalized music 
 
 ## Prerequisites
 
-Before using this application, ensure you have the following:
+Before using this application, ensure you have the following account:
 
-- **Spotify Developer Account**: To interact with the Spotify API and access personalized music recommendations, you'll need to create a Spotify Developer Account. You can sign up for a free account on the [Spotify for Developers](https://developer.spotify.com/) website. Once registered, you'll obtain your Client ID and Secret ID, which are required for authentication when using the application.
+- **Spotify Developer Account**: To interact with the Spotify API and access personalized music recommendations, you'll need to create a Spotify Developer Account. You can sign up for a free account on the [Spotify for Developers](https://developer.spotify.com/) website. Once registered, you can retrieve your **Client ID** and **Secret ID** by navigating to your profile image, clicking on Dashboard, selecting the project you've created for using this app, and then accessing Settings. These credentials are required only once when you execute the _main.exe_ file for the first time.
+
 
 ---
 
@@ -22,7 +23,7 @@ To use this application effectively, follow these steps:
    ```
 2. **Execute the main.exe**: Navigate to the folder _recommenderSpotify_ and then open the dist/main directory. Inside this directory, you'll find main.exe. Simply double-click on main.exe to run the application, or if you prefer using the command line, execute _main.exe_.
 
-3. **Update Credentials**: If it is the first time that you are executing _main.exe_ you will be eventually asked for inputting your Developer Account credentials. This will happen once. In case you change your _secret_id_ from the Spotify Developer page you can rewrite your credentials by running option "c" in the main menu. 
+3. **Update Credentials**: If it is the first time that you are executing _main.exe_ you will be eventually asked to input your Developer Account credentials. This will happen once. In case you change your _secret_id_ from the Spotify Developer page you can rewrite your credentials by running option "c" in the main menu. 
 
 5. **Update Listened Songs History**: It's advisable to update the listened songs history before getting recommendations. Use options "a" and "b" in the main menu to generate a history of the songs you have already listened to. This helps prevent recommending songs you've already heard.
 
@@ -47,7 +48,7 @@ To use this application effectively, follow these steps:
 
 - **Resetting Credentials**: If you encounter any authentication errors or strange behavior, you can reset the user credentials by running option "c" in the main menu.
 
-- **Credential Security**: Rest assured that your credentials are stored locally and used solely for authentication purposes with the Spotify server. They are not shared or transmitted elsewhere. Still, you 
+- **Credential Security**: Note that your credentials are stored locally and used only for authentication purposes with the Spotify server. They are not shared or transmitted anywhere else. You can still change the Secret ID at any time, only you may also have to change it using the "c" option. 
 
 ## Contributions
 
