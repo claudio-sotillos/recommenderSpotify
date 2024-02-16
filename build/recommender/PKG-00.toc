@@ -1,4 +1,4 @@
-('C:\\Users\\Claud\\Documents\\Herramientas\\recommenderSpotify\\build\\recommender\\main.pkg',
+('C:\\Users\\Claud\\Documents\\Herramientas\\recommenderSpotify\\build\\recommender\\recommender.pkg',
  {'BINARY': True,
   'DATA': True,
   'EXECUTABLE': True,

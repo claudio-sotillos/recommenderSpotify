@@ -1,7 +1,11 @@
+from colorama import Fore, Back, Style, init
 import pickle
-import os, sys
+import os
+import sys
 from login import loginPLT
 
+# Initialize colorama on Windows
+init()
 
 def recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name):
 
@@ -11,7 +15,7 @@ def recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name):
     user_profile = sp.current_user()
     user_id = user_profile["id"]
 
-    print("  \n  New Playlist --- ", playlist_name)
+    print(f"\n{Fore.GREEN}  New Playlist --- {playlist_name}{Style.RESET_ALL}")
 
     playlistLen = 30
 
@@ -23,11 +27,11 @@ def recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name):
     # )
 
     # FOR EXE
-    pickle_file_path = os.path.join(os.path.dirname(sys.executable),  '_internal', 'recommended_ids.pkl')
+    pickle_file_path = os.path.join(os.path.dirname(sys.executable), '_internal', 'recommended_ids.pkl')
     with open(pickle_file_path, "rb") as f:
         recommended_track_ids = pickle.load(f)
 
-    print("  \n   Recommended Songs")
+    print(f"\n{Fore.YELLOW}   Recommended Songs{Style.RESET_ALL}")
 
     track_uris = []
     while len(track_uris) < playlistLen:
@@ -46,8 +50,8 @@ def recommend_createPL(seed_artists, seed_tracks, seed_genres, playlist_name):
             if track["uri"] not in recommended_track_ids:
                 recommended_track_ids.add(track["uri"])
                 track_uris.append(track["uri"])
-                print("  \n    Song Name: ", track["name"])
-                print("      Artists: ", track["artists"][0]["name"])
+                print(f"\n{Fore.CYAN}    Song Name:{Style.RESET_ALL} {track['name']}")
+                print(f"      {Fore.CYAN}Artists:{Style.RESET_ALL} {track['artists'][0]['name']}")
 
     print()
 

@@ -1,11 +1,11 @@
-import pickle
-import os, sys
-from login import loginPLT
+from colorama import Fore, Back, Style, init
 import pickle
 import os
 import sys
 from login import loginPLT
 
+# Initialize colorama for colored output
+init()
 
 def get_playlist_id(sp, playlistName="Ma Musik"):
     sp = loginPLT(scope="playlist-read-private")
@@ -20,7 +20,6 @@ def get_playlist_id(sp, playlistName="Ma Musik"):
             playlistID = playlist["id"]
 
     return playlistID
-
 
 # Define function to get user's top items
 def get_user_top_items(time_range="medium_term", limit=10, type="tracks"):
@@ -62,7 +61,6 @@ def get_user_top_items(time_range="medium_term", limit=10, type="tracks"):
             top_items.append({"name": genre, "count": count})
     return top_items
 
-
 def update_recommender_pickle(playlist_name=None, scope="playlist-modify-private"):
     # Log in & Choose playlist
     sp = loginPLT(scope=scope)
@@ -84,9 +82,9 @@ def update_recommender_pickle(playlist_name=None, scope="playlist-modify-private
         recommended_track_ids = pickle.load(f)
 
     init_len = len(recommended_track_ids)
-    print("  \n    Actual History of Songs -- Amount: ", init_len)
+    print(f"\n{Fore.GREEN}    Actual History of Songs -- Amount: {init_len}{Style.RESET_ALL}")
     if scope == "user-library-read":
-        print("  Adding songs already listened from the 'Liked Songs' List ...")
+        print("    Adding songs already listened from the 'Liked Songs' List ...")
         results = sp.current_user_saved_tracks(limit=1)
         total_tracks = results["total"]
         last_batch_start = total_tracks % batch_size
@@ -97,7 +95,7 @@ def update_recommender_pickle(playlist_name=None, scope="playlist-modify-private
         total_tracks = playlist["tracks"]["total"]
         last_batch_start = total_tracks % batch_size
         print(
-            "Adding songs already listened from the Playlist '", playlist_name, "' ..."
+            f"    Adding songs already listened from the Playlist '{playlist_name}' ..."
         )
 
     if last_batch_start == 0:
@@ -124,10 +122,10 @@ def update_recommender_pickle(playlist_name=None, scope="playlist-modify-private
         pickle.dump(recommended_track_ids, f)
 
     end_len = len(recommended_track_ids)
-    print("  \n    Updated History of Songs -- Amount: ", end_len)
+    print(f"\n{Fore.GREEN}    Updated History of Songs -- Amount: {end_len}{Style.RESET_ALL}")
 
     if end_len > init_len:
-        print(end_len - init_len, " Songs where added to your History ")
+        print(f"    {end_len - init_len} Songs where added to your History ")
 
     else:
-        print("  There aren´t new Songs to add to your History.")
+        print("    There aren´t new Songs to add to your History.")

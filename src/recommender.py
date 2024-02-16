@@ -1,3 +1,4 @@
+from colorama import Fore, Back, Style, init
 from login import updateCredentials
 from utils import update_recommender_pickle
 from trackStrategy import random_tracks_based_strategy, track_based_strategy
@@ -10,34 +11,37 @@ def print_separator():
     print("\n" + "-" * 80)
 
 
+# Initialize colorama on Windows
+init()
+
 # Main function to execute the selected strategy
 def main():
     time_range_mapping = {"1": "short_term", "2": "medium_term", "3": "long_term"}
     while True:
         print_separator()
-        print("\n  Choose Strategy: ")
-        print("     1 - Track-Based Strategy")
+        print(Fore.YELLOW + "\n  Choose Strategy: ")
+        print(Fore.CYAN + "     1 - Track-Based Strategy")
         print("     2 - Artist-Based Strategy")
         print("     3 - Genre-Based Strategy")
 
-        print("\n  More Options")
-        print("     a - Update Listened Songs History with Playlist")
+        print(Fore.YELLOW + "\n  More Options")
+        print(Fore.CYAN + "     a - Update Listened Songs History with Playlist")
         print("     b - Update Listened Songs History with songs in the 'Liked Songs' Playlist")
         print("     c - Update your Credentials (Client/Secret ID)")
         print("     e - Exit")
 
-        strategy = input("\n  Choose the strategy (1, 2, 3 or e): ").strip().lower()
+        strategy = input(Style.RESET_ALL + Fore.WHITE + "\n  Choose the strategy (1, 2, 3 or e): ").strip().lower()
 
         if strategy == "1":
             while True:
                 print_separator()
-                print("\n  Choose Track-Based Strategy: ")
-                print("     1 - Based on 5 Random Songs (from your last 50 Playlist songs)")
+                print(Fore.YELLOW + "\n  Choose Track-Based Strategy: ")
+                print(Fore.CYAN + "     1 - Based on 5 Random Songs (from your last 50 Playlist songs)")
                 print("     2 - Based on your Most Listened Songs (this month/ this year/ all times)")
                 print("     b - Back to main menu")
 
                 track_strategy = (
-                    input("\n  Choose the track-based strategy (1, 2 or b): ")
+                    input(Style.RESET_ALL + Fore.WHITE + "\n  Choose the track-based strategy (1, 2 or b): ")
                     .strip()
                     .lower()
                 )
@@ -56,18 +60,18 @@ def main():
                 elif track_strategy == "b":
                     break
                 else:
-                    print("  Invalid choice. Please choose a valid option.")
+                    print(Fore.RED + "  Invalid choice. Please choose a valid option.")
 
         elif strategy == "2":
             while True:
                 print_separator()
-                print("\n  Choose Artist-Based Strategy: ")
-                print("     1 - Based on 5 Random Artists (from your last 50 Playlist songs)")
+                print(Fore.YELLOW + "\n  Choose Artist-Based Strategy: ")
+                print(Fore.CYAN + "     1 - Based on 5 Random Artists (from your last 50 Playlist songs)")
                 print("     2 - Based on your Most Listened Artists (this month/ this year/ all times)")
                 print("     b - Back to main menu")
 
                 artist_strategy = (
-                    input("\n  Choose the artist-based strategy (1, 2 or b): ")
+                    input(Style.RESET_ALL + Fore.WHITE + "\n  Choose the artist-based strategy (1, 2 or b): ")
                     .strip()
                     .lower()
                 )
@@ -87,17 +91,17 @@ def main():
                 elif artist_strategy == "b":
                     break
                 else:
-                    print("  Invalid choice. Please choose a valid option.")
+                    print(Fore.RED + "  Invalid choice. Please choose a valid option.")
 
         elif strategy == "3":
             while True:
                 print_separator()
-                print("\n  Choose Genre-Based Strategy: ")
-                print("     1 - Based on your Most Listened Genres (this month/ this year/ all times)")
+                print(Fore.YELLOW + "\n  Choose Genre-Based Strategy: ")
+                print(Fore.CYAN + "     1 - Based on your Most Listened Genres (this month/ this year/ all times)")
                 print("     b - Back to main menu")
 
                 genre_strategy = (
-                    input("\n  Choose the genre-based strategy (1 or b): ")
+                    input(Style.RESET_ALL + Fore.WHITE + "\n  Choose the genre-based strategy (1 or b): ")
                     .strip()
                     .lower()
                 )
@@ -114,11 +118,11 @@ def main():
                 elif genre_strategy == "b":
                     break
                 else:
-                    print("  Invalid choice. Please choose a valid option.")
+                    print(Fore.RED + "  Invalid choice. Please choose a valid option.")
 
         elif strategy == "a":
             print_separator()
-            print("\n  Select Playlist")
+            print(Fore.YELLOW + "\n  Select Playlist")
             playlistName = input("  Write Name Here: ")
             update_recommender_pickle(playlist_name=playlistName)
         elif strategy == "b":
@@ -129,11 +133,12 @@ def main():
             updateCredentials()
         elif strategy == "e":
             print_separator()
-            print("\n  Exiting program. Goodbye & Enjoy ;) ")
+            print(Fore.YELLOW + "\n  Exiting program. Goodbye & Enjoy ;) ")
             break
         else:
-            print("  Invalid choice. Please choose a valid option.")
+            print(Fore.RED + "  Invalid choice. Please choose a valid option.")
 
 
 if __name__ == "__main__":
     main()
+

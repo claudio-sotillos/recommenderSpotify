@@ -1,13 +1,16 @@
+from colorama import Fore, Back, Style, init
 import os
 from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
+# Initialize colorama on Windows
+init()
 
 def updateCredentials():
     while True:
         # Prompt user to provide Spotify client ID and client secret
-        print("  \n  Please provide your Spotify client ID and client secret:")
+        print(f"{Fore.YELLOW}\n  Please provide your Spotify client ID and client secret:{Style.RESET_ALL}")
         client_id = input("  Client ID: ")
         client_secret = input("  Client Secret: ")
 
@@ -32,16 +35,15 @@ def updateCredentials():
                 env_file.write(f"\nSPOTIFY_CLIENT_ID={client_id}\n")
                 env_file.write(f"SPOTIFY_CLIENT_SECRET={client_secret}\n")
 
-            print("  User Credentials updated successfully.")
+            print(f"{Fore.GREEN}  User Credentials updated successfully.{Style.RESET_ALL}")
             return client_id, client_secret
 
         except spotipy.oauth2.SpotifyOauthError as e:
-            print("  \n  Error:", e)
-            print("  Invalid credentials. Please try again.")
+            print(f"{Fore.RED}  Error:{Style.RESET_ALL}", e)
+            print(f"{Fore.RED}  Invalid credentials. Please try again.{Style.RESET_ALL}")
 
 
 def loginPLT(scope="playlist-modify-private"):
-
     load_dotenv()
     # Access environment variables
     client_id = os.getenv("SPOTIFY_CLIENT_ID")
